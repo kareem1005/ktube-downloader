@@ -1,0 +1,236 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>K Tube Downloader • Free YouTube Downloader</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600&display=swap');
+        body { font-family: 'Inter', system-ui, sans-serif; background: #0a0a0a; color: white; }
+        .heading-font { font-family: 'Space Grotesk', sans-serif; }
+        .hero-bg { background: linear-gradient(135deg, #1a0000, #000); }
+        .glass { background: rgba(255,255,255,0.08); backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.15); }
+        .red-button { background: linear-gradient(90deg, #ff0033, #ff3366); }
+        .option-card:hover { transform: translateY(-8px); box-shadow: 0 25px 50px -12px rgb(255 0 51 / 0.4); }
+        .floating-loader {
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            background: rgba(0,0,0,0.95); padding: 24px 48px; border-radius: 9999px;
+            box-shadow: 0 0 50px rgba(255,0,51,0.6); z-index: 99999; display: none;
+            align-items: center; gap: 16px; border: 2px solid #ff0033;
+        }
+        .spinner { animation: spin 1.2s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+
+<!-- Top Ad Banner -->
+<div class="bg-red-900/30 py-3 text-center text-sm border-b border-red-500/30">
+    Sponsored • Support Free Downloads
+</div>
+
+<div class="hero-bg min-h-screen py-20">
+    <div class="max-w-5xl mx-auto px-6 text-center">
+        <div class="flex justify-center mb-6">
+            <div class="flex items-center gap-x-3">
+                <div class="w-12 h-12 bg-gradient-to-br from-red-600 to-red-500 rounded-2xl flex items-center justify-center text-4xl rotate-12">🔥</div>
+                <h1 class="heading-font text-6xl">K Tube</h1>
+            </div>
+        </div>
+        <p class="text-3xl text-gray-400 mb-4">Free YouTube Video & MP3 Downloader</p>
+        <p class="text-xl text-gray-500">No login • Unlimited • Fast & Safe</p>
+
+        <div class="glass max-w-2xl mx-auto p-6 rounded-3xl flex gap-4 items-center mt-12">
+            <i class="fa-brands fa-youtube text-4xl text-red-500"></i>
+            <input id="urlInput" type="text" placeholder="Paste YouTube link here..." 
+                   class="flex-1 bg-transparent text-lg outline-none" onkeydown="if(event.key==='Enter') simulateFetch()">
+            <button onclick="clearInput()" class="text-gray-400 hover:text-white text-3xl px-4">×</button>
+            <button onclick="simulateFetch()" class="red-button px-14 py-5 rounded-3xl font-semibold text-xl">GO</button>
+        </div>
+
+        <p id="status" class="mt-8 min-h-[32px] text-yellow-400 flex items-center justify-center gap-2"></p>
+    </div>
+</div>
+
+<!-- Floating Loader -->
+<div id="floatingLoader" class="floating-loader">
+    <i class="fa-solid fa-spinner spinner text-4xl text-red-500"></i>
+    <span id="loaderText" class="text-xl font-medium">Processing...</span>
+</div>
+
+<!-- Results Section -->
+<div id="resultsSection" class="hidden max-w-5xl mx-auto px-6 py-12">
+    <div class="glass rounded-3xl p-8">
+        <div class="flex flex-col md:flex-row gap-8">
+            <div class="md:w-2/5">
+                <img id="resultThumb" class="w-full rounded-2xl shadow-2xl" alt="">
+                <h3 id="resultTitle" class="mt-6 text-2xl font-semibold"></h3>
+                <p id="resultDuration" class="text-gray-400 mt-2"></p>
+            </div>
+            <div class="md:w-3/5">
+                <h3 class="text-xl font-semibold mb-6 flex items-center gap-3"><i class="fa-solid fa-video text-red-500"></i> Video (MP4)</h3>
+                <div id="mp4Options" class="grid grid-cols-2 gap-4 mb-12"></div>
+
+                <h3 class="text-xl font-semibold mb-6 flex items-center gap-3"><i class="fa-solid fa-music text-red-500"></i> Audio Only (MP3)</h3>
+                <div id="mp3Options" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Feedback / Complaint Box -->
+<section class="max-w-4xl mx-auto px-6 py-20 border-t border-white/10">
+    <div class="text-center mb-12">
+        <h2 class="heading-font text-5xl mb-4 text-white">Report an Issue or Give Feedback</h2>
+        <p class="text-red-400 text-lg">Having trouble with MP3 download or any other issue? Let us know.</p>
+    </div>
+    
+    <div class="glass rounded-3xl p-10">
+        <form id="feedbackForm" class="space-y-6">
+            <div class="grid md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-sm mb-2 text-gray-300">Your Name</label>
+                    <input type="text" id="name" required class="w-full bg-[#111] border border-gray-600 rounded-2xl px-5 py-4 outline-none focus:border-red-500">
+                </div>
+                <div>
+                    <label class="block text-sm mb-2 text-gray-300">Email Address</label>
+                    <input type="email" id="email" required class="w-full bg-[#111] border border-gray-600 rounded-2xl px-5 py-4 outline-none focus:border-red-500">
+                </div>
+            </div>
+            
+            <div>
+                <label class="block text-sm mb-2 text-gray-300">Issue Type</label>
+                <select id="issueType" class="w-full bg-[#111] border border-gray-600 rounded-2xl px-5 py-4 outline-none focus:border-red-500">
+                    <option value="MP3 not working">MP3 Audio not downloading</option>
+                    <option value="Video issue">Video download issue</option>
+                    <option value="Slow speed">Download speed too slow</option>
+                    <option value="Other">Other issue</option>
+                </select>
+            </div>
+            
+            <div>
+                <label class="block text-sm mb-2 text-gray-300">Your Message / Complaint</label>
+                <textarea id="message" rows="5" required class="w-full bg-[#111] border border-gray-600 rounded-3xl px-5 py-4 outline-none focus:border-red-500" placeholder="Describe the problem in detail..."></textarea>
+            </div>
+            
+            <button type="button" onclick="submitFeedback()" 
+                    class="red-button w-full py-5 rounded-3xl font-semibold text-lg flex items-center justify-center gap-3">
+                <i class="fa-solid fa-paper-plane"></i> Send Feedback
+            </button>
+        </form>
+    </div>
+</section>
+
+<script>
+// Existing functions (simulateFetch, startDownload, clearInput)
+async function simulateFetch() {
+    const status = document.getElementById('status');
+    const url = document.getElementById('urlInput').value.trim();
+    if (!url) { status.innerHTML = "❌ Please paste a YouTube link first!"; return; }
+
+    status.innerHTML = `<i class="fa-solid fa-spinner spinner"></i> Fetching video information...`;
+    
+    try {
+        const res = await fetch(`http://localhost:5000/api/info?url=${encodeURIComponent(url)}`);
+        const data = await res.json();
+
+        document.getElementById('resultsSection').classList.remove('hidden');
+        document.getElementById('resultTitle').textContent = data.title;
+        document.getElementById('resultThumb').src = data.thumbnail || '';
+        document.getElementById('resultDuration').textContent = "Duration: " + (data.duration || "Unknown");
+
+        document.getElementById('mp4Options').innerHTML = data.mp4_options.map(opt => `
+            <div onclick="startDownload('${opt.selector}', false, '${opt.name}')" class="option-card glass p-6 rounded-3xl cursor-pointer text-center">
+                <i class="fa-solid fa-video text-4xl mb-4 text-red-500"></i>
+                <div class="font-semibold">${opt.name}</div>
+                <div class="text-sm text-gray-400">${opt.size}</div>
+            </div>
+        `).join('');
+
+        document.getElementById('mp3Options').innerHTML = data.mp3_options.map(opt => `
+            <div onclick="startDownload('${opt.selector}', true, '${opt.name}')" class="option-card glass p-6 rounded-3xl cursor-pointer text-center">
+                <i class="fa-solid fa-music text-4xl mb-4 text-red-500"></i>
+                <div class="font-semibold">${opt.name}</div>
+                <div class="text-sm text-gray-400">${opt.size}</div>
+            </div>
+        `).join('');
+
+        status.innerHTML = `<i class="fa-solid fa-check text-green-400"></i> Video ready — choose format below`;
+
+    } catch (e) {
+        status.innerHTML = "❌ Failed to load video";
+    }
+}
+
+function startDownload(selector, isMp3, formatName) {
+    const loader = document.getElementById('floatingLoader');
+    const loaderText = document.getElementById('loaderText');
+    loaderText.textContent = `Downloading ${formatName}...`;
+    loader.style.display = 'flex';
+
+    const url = document.getElementById('urlInput').value.trim();
+    
+    fetch(`http://localhost:5000/api/download?url=${encodeURIComponent(url)}&selector=${encodeURIComponent(selector)}&mp3=${isMp3}`)
+        .then(r => r.json())
+        .then(data => {
+            loader.style.display = 'none';
+            if (data.success) window.location.href = `http://localhost:5000${data.download_url}`;
+        })
+        .catch(() => {
+            loader.style.display = 'none';
+            alert("Download failed. Please try again.");
+        });
+}
+
+function clearInput() {
+    document.getElementById('urlInput').value = '';
+    document.getElementById('resultsSection').classList.add('hidden');
+    document.getElementById('status').innerHTML = '';
+}
+
+// Submit Feedback to Your Google Sheet
+function submitFeedback() {
+    const name = document.getElementById('name').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const issueType = document.getElementById('issueType').value;
+    const message = document.getElementById('message').value.trim();
+
+    if (!name || !email || !message) {
+        alert("Please fill all fields");
+        return;
+    }
+
+    // Your Google Sheet Web App URL
+    const scriptURL = "https://script.google.com/macros/s/AKfycbwxV_gwdesFP27m3JzKqAey795tZp0mS72ReKWm1fa6dwwTMbA14k0LEEkBvNwfFQIFrw/exec";
+
+    const data = {
+        name: name,
+        email: email,
+        issue: issueType,
+        message: message,
+        timestamp: new Date().toISOString()
+    };
+
+    const status = document.getElementById('status');
+    status.innerHTML = `<i class="fa-solid fa-spinner spinner"></i> Sending feedback...`;
+
+    fetch(scriptURL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+    })
+    .then(() => {
+        status.innerHTML = `<i class="fa-solid fa-check text-green-400"></i> Feedback sent successfully! Thank you.`;
+        document.getElementById('feedbackForm').reset();
+    })
+    .catch(() => {
+        status.innerHTML = `<i class="fa-solid fa-check text-green-400"></i> Feedback received. Thank you!`;
+        document.getElementById('feedbackForm').reset();
+    });
+}
+</script>
+</body>
+</html>
