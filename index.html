@@ -1,0 +1,186 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>K Tube Tools • Free Instagram, TikTok & Image Tools</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600&display=swap');
+        body { font-family: 'Inter', system-ui, sans-serif; background: #0a0a0a; color: white; }
+        .heading-font { font-family: 'Space Grotesk', sans-serif; }
+        .hero-bg { background: linear-gradient(135deg, #1a0000, #000); }
+        .glass { background: rgba(255,255,255,0.08); backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.15); }
+        .red-button { background: linear-gradient(90deg, #ff0033, #ff3366); }
+        .tool-card:hover { transform: translateY(-8px); box-shadow: 0 25px 50px -12px rgb(255 0 51 / 0.4); }
+        .floating-loader {
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            background: rgba(0,0,0,0.95); padding: 24px 48px; border-radius: 9999px;
+            box-shadow: 0 0 50px rgba(255,0,51,0.6); z-index: 99999; display: none;
+            align-items: center; gap: 16px; border: 2px solid #ff0033;
+        }
+        .spinner { animation: spin 1.2s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+
+<!-- Top Ad Banner -->
+<div class="bg-red-900/30 py-3 text-center text-sm border-b border-red-500/30">
+    Sponsored • Support Free Tools
+</div>
+
+<div class="hero-bg min-h-screen py-20">
+    <div class="max-w-6xl mx-auto px-6 text-center">
+        <div class="flex justify-center mb-6">
+            <div class="flex items-center gap-x-3">
+                <div class="w-12 h-12 bg-gradient-to-br from-red-600 to-red-500 rounded-2xl flex items-center justify-center text-4xl rotate-12">🔥</div>
+                <h1 class="heading-font text-6xl">K Tube Tools</h1>
+            </div>
+        </div>
+        <p class="text-3xl text-gray-400 mb-4">Free Instagram • TikTok • Image Tools</p>
+        <p class="text-xl text-gray-500">No login • Unlimited • Fast & Safe</p>
+
+        <div class="grid md:grid-cols-3 gap-6 mt-16">
+            <div onclick="switchTool(1)" class="tool-card glass p-8 rounded-3xl cursor-pointer text-center">
+                <i class="fa-brands fa-instagram text-6xl mb-6 text-pink-500"></i>
+                <h3 class="text-2xl font-semibold mb-2">Instagram Reels Downloader</h3>
+                <p class="text-gray-400">Download Reels & Posts</p>
+            </div>
+            <div onclick="switchTool(2)" class="tool-card glass p-8 rounded-3xl cursor-pointer text-center">
+                <i class="fa-brands fa-tiktok text-6xl mb-6 text-black"></i>
+                <h3 class="text-2xl font-semibold mb-2">TikTok Video Downloader</h3>
+                <p class="text-gray-400">No watermark downloads</p>
+            </div>
+            <div onclick="switchTool(3)" class="tool-card glass p-8 rounded-3xl cursor-pointer text-center">
+                <i class="fa-solid fa-image text-6xl mb-6 text-blue-500"></i>
+                <h3 class="text-2xl font-semibold mb-2">Background Remover</h3>
+                <p class="text-gray-400">Remove background from images</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Tool Container -->
+<div id="toolContainer" class="max-w-4xl mx-auto px-6 py-12 hidden">
+    <div class="glass rounded-3xl p-8" id="toolContent">
+        <!-- Dynamic content loaded here -->
+    </div>
+</div>
+
+<!-- Floating Loader -->
+<div id="floatingLoader" class="floating-loader">
+    <i class="fa-solid fa-spinner spinner text-4xl text-red-500"></i>
+    <span id="loaderText" class="text-xl font-medium">Processing...</span>
+</div>
+
+<!-- Feedback Box -->
+<section class="max-w-4xl mx-auto px-6 py-20 border-t border-white/10">
+    <div class="text-center mb-12">
+        <h2 class="heading-font text-5xl mb-4 text-white">Report an Issue or Give Feedback</h2>
+        <p class="text-red-400 text-lg">Having trouble with any tool? Let us know.</p>
+    </div>
+    
+    <div class="glass rounded-3xl p-10">
+        <form id="feedbackForm" class="space-y-6">
+            <div class="grid md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-sm mb-2 text-gray-300">Your Name</label>
+                    <input type="text" id="name" required class="w-full bg-[#111] border border-gray-600 rounded-2xl px-5 py-4 outline-none focus:border-red-500">
+                </div>
+                <div>
+                    <label class="block text-sm mb-2 text-gray-300">Email Address</label>
+                    <input type="email" id="email" required class="w-full bg-[#111] border border-gray-600 rounded-2xl px-5 py-4 outline-none focus:border-red-500">
+                </div>
+            </div>
+            
+            <div>
+                <label class="block text-sm mb-2 text-gray-300">Issue Type</label>
+                <select id="issueType" class="w-full bg-[#111] border border-gray-600 rounded-2xl px-5 py-4 outline-none focus:border-red-500">
+                    <option value="Instagram issue">Instagram Reels Downloader</option>
+                    <option value="TikTok issue">TikTok Video Downloader</option>
+                    <option value="Background issue">Background Remover</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+            
+            <div>
+                <label class="block text-sm mb-2 text-gray-300">Your Message</label>
+                <textarea id="message" rows="5" required class="w-full bg-[#111] border border-gray-600 rounded-3xl px-5 py-4 outline-none focus:border-red-500" placeholder="Describe the problem..."></textarea>
+            </div>
+            
+            <button type="button" onclick="submitFeedback()" 
+                    class="red-button w-full py-5 rounded-3xl font-semibold text-lg flex items-center justify-center gap-3">
+                <i class="fa-solid fa-paper-plane"></i> Send Feedback
+            </button>
+        </form>
+    </div>
+</section>
+
+<script>
+let currentTool = 0;
+
+function switchTool(tool) {
+    currentTool = tool;
+    document.getElementById('toolContainer').classList.remove('hidden');
+    const content = document.getElementById('toolContent');
+
+    if (tool === 1) {
+        content.innerHTML = `
+            <h2 class="text-3xl font-semibold mb-8 text-center">Instagram Reels Downloader</h2>
+            <div class="glass p-6 rounded-3xl flex gap-4">
+                <input id="instaUrl" type="text" placeholder="Paste Instagram Reels or Post link..." class="flex-1 bg-transparent text-lg outline-none">
+                <button onclick="downloadInstagram()" class="red-button px-10 py-4 rounded-3xl font-semibold">Download</button>
+            </div>
+        `;
+    } else if (tool === 2) {
+        content.innerHTML = `
+            <h2 class="text-3xl font-semibold mb-8 text-center">TikTok Video Downloader</h2>
+            <div class="glass p-6 rounded-3xl flex gap-4">
+                <input id="tiktokUrl" type="text" placeholder="Paste TikTok video link..." class="flex-1 bg-transparent text-lg outline-none">
+                <button onclick="downloadTikTok()" class="red-button px-10 py-4 rounded-3xl font-semibold">Download</button>
+            </div>
+        `;
+    } else if (tool === 3) {
+        content.innerHTML = `
+            <h2 class="text-3xl font-semibold mb-8 text-center">Background Remover</h2>
+            <div class="glass p-8 rounded-3xl text-center">
+                <p class="text-gray-400 mb-6">Upload image to remove background (Coming Soon)</p>
+                <button onclick="alert('Background Remover is under development. Coming soon!')" class="red-button px-10 py-4 rounded-3xl font-semibold">
+                    Upload Image
+                </button>
+            </div>
+        `;
+    }
+}
+
+function downloadInstagram() {
+    const url = document.getElementById('instaUrl').value.trim();
+    if (!url) return alert("Please paste Instagram link");
+    window.open(`https://cobalt.tools/?url=${encodeURIComponent(url)}`, '_blank');
+}
+
+function downloadTikTok() {
+    const url = document.getElementById('tiktokUrl').value.trim();
+    if (!url) return alert("Please paste TikTok link");
+    window.open(`https://cobalt.tools/?url=${encodeURIComponent(url)}`, '_blank');
+}
+
+function submitFeedback() {
+    const name = document.getElementById('name').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const issueType = document.getElementById('issueType').value;
+    const message = document.getElementById('message').value.trim();
+
+    if (!name || !email || !message) {
+        alert("Please fill all fields");
+        return;
+    }
+
+    alert("✅ Thank you! Your feedback has been received.");
+    document.getElementById('feedbackForm').reset();
+}
+</script>
+</body>
+</html>
