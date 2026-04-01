@@ -1,0 +1,66 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>K Tube Downloader • Free YouTube Downloader</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600&display=swap');
+        body { font-family: 'Inter', system-ui, sans-serif; background: #0a0a0a; color: white; }
+        .heading-font { font-family: 'Space Grotesk', sans-serif; }
+        .hero-bg { background: linear-gradient(135deg, #1a0000, #000); }
+        .glass { background: rgba(255,255,255,0.08); backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.15); }
+        .red-button { background: linear-gradient(90deg, #ff0033, #ff3366); }
+    </style>
+</head>
+<body>
+
+<div class="hero-bg min-h-screen py-20">
+    <div class="max-w-5xl mx-auto px-6 text-center">
+        <div class="flex justify-center mb-6">
+            <div class="flex items-center gap-x-3">
+                <div class="w-12 h-12 bg-gradient-to-br from-red-600 to-red-500 rounded-2xl flex items-center justify-center text-4xl rotate-12">🔥</div>
+                <h1 class="heading-font text-6xl">K Tube</h1>
+            </div>
+        </div>
+        <p class="text-3xl text-gray-400 mb-4">Free YouTube Video & MP3 Downloader</p>
+        <p class="text-xl text-gray-500">No login • Unlimited • Fast & Safe</p>
+
+        <div class="glass max-w-2xl mx-auto p-6 rounded-3xl flex gap-4 items-center mt-12">
+            <i class="fa-brands fa-youtube text-4xl text-red-500"></i>
+            <input id="urlInput" type="text" placeholder="Paste YouTube link here..." 
+                   class="flex-1 bg-transparent text-lg outline-none" onkeydown="if(event.key==='Enter') goToDownload()">
+            <button onclick="clearInput()" class="text-gray-400 hover:text-white text-3xl px-4">×</button>
+            <button onclick="goToDownload()" class="red-button px-14 py-5 rounded-3xl font-semibold text-xl">GO</button>
+        </div>
+
+        <p id="status" class="mt-8 min-h-[32px] text-yellow-400"></p>
+    </div>
+</div>
+
+<script>
+function goToDownload() {
+    const url = document.getElementById('urlInput').value.trim();
+    const status = document.getElementById('status');
+    
+    if (!url) {
+        status.innerHTML = "❌ Please paste a YouTube link first!";
+        return;
+    }
+
+    status.innerHTML = "⏳ Opening downloader...";
+    
+    // Reliable public downloader (cobalt.tools)
+    const encodedUrl = encodeURIComponent(url);
+    window.location.href = `https://cobalt.tools/?url=${encodedUrl}`;
+}
+
+function clearInput() {
+    document.getElementById('urlInput').value = '';
+    document.getElementById('status').innerHTML = '';
+}
+</script>
+</body>
+</html>
